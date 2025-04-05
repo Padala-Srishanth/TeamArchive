@@ -1,6 +1,6 @@
 // src/components/Header/Header.tsx
 import React, { useState } from 'react';
-import { Calendar, BookOpen, Users, Bell, User, ChevronDown } from 'lucide-react';
+import { Calendar, BookOpen, Users, Bell, User, ChevronDown, Trophy } from 'lucide-react';
 import { UserType } from '../types';
 
 interface HeaderProps {
@@ -24,11 +24,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Logo Section */}
           <div className="flex items-center space-x-2">
             <div className="p-2 bg-white rounded-lg shadow-md transform hover:rotate-12 transition-transform duration-300">
-              <Calendar className="h-6 w-6 text-indigo-600" />
+            <Trophy className="h-6 w-6 text-indigo-600" />
             </div>
             <span className="text-2xl font-extrabold text-white tracking-tight">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-200">
-                EventHub
+                Archives
               </span>
             </span>
           </div>

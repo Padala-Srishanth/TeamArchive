@@ -9,7 +9,7 @@ interface InitialStepProps {
 
 export const InitialStep: React.FC<InitialStepProps> = ({ onStudentClick, onOrganizerClick }) => (
   <div className="text-center">
-    <h2 className="text-2xl font-bold mb-6">Welcome to EventHub</h2>
+    <h2 className="text-2xl font-bold mb-6">Welcome to Archives</h2>
     <p className="text-gray-600 mb-8">Are you a student?</p>
     <div className="space-y-4">
       <button

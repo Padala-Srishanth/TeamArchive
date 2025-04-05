@@ -1,7 +1,7 @@
 // EventCard.tsx
 import React from 'react';
 import { CalendarIcon, MapPinIcon } from '@heroicons/react/24/outline'; // Make sure to import icons
-import { Event } from './types';
+import { Event } from '../types';
 
 interface EventCardProps {
   event: Event;

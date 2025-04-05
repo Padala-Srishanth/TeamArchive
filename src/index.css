@@ -3,3 +3,150 @@
 @tailwind utilities;
 
 
+
+/* styles.css or index.css */
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #818cf8;
+    --secondary: #7c3aed;
+    --accent: #f59e0b;
+    --dark: #1e293b;
+    --light: #f8fafc;
+    --gray: #94a3b8;
+    --gray-light: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif; /* Font is now available from HTML import */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: var(--dark);
+    background-color: var(--light);
+    background-image: 
+      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0px, 
+      transparent 50%),
+      radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.2) 0px, 
+      transparent 50%);
+    background-attachment: fixed;
+  }
+  
+  /* Rest of your CSS rules... */
+
+/* Animated Gradient Background */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Glassmorphism Effect for Cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* Header Background */
+.header-bg {
+  background: linear-gradient(135deg, 
+    var(--primary) 0%, 
+    var(--secondary) 100%);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Card Hover Effect */
+.event-card {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Background */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Sidebar Background */
+.sidebar-bg {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Button Gradients */
+.btn-primary {
+  background: linear-gradient(135deg, 
+    var(--primary) 0%, 
+    var(--primary-dark) 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, 
+    var(--primary-dark) 0%, 
+    var(--primary) 100%);
+  transform: translateY(-2px);
+}
+
+/* Notification Bubble */
+.notification-bubble {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+}
+
+/* Responsive Background Adjustments */
+@media (max-width: 768px) {
+  body {
+    background-image: 
+      radial-gradient(at 90% 0%, hsla(189, 100%, 56%, 0.1) 0px, 
+      transparent 50%),
+      radial-gradient(at 0% 60%, hsla(355, 100%, 93%, 0.2) 0px, 
+      transparent 50%);
+  }
+}
+
+/* Dark Mode Support (optional) */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0f172a;
+    color: #f8fafc;
+    background-image: 
+      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.05) 0px, 
+      transparent 50%),
+      radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.05) 0px, 
+      transparent 50%);
+  }
+  
+  .glass-card {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}

@@ -1,7 +1,6 @@
 // src/App.tsx
 import React, { useState, useEffect } from 'react';
-import { Calendar, BookOpen, Users, Bell, User, ChevronDown, X, Menu } from 'lucide-react';
-import './index.css'; // Import your CSS file here
+import { Calendar, BookOpen, Users, Bell, User, ChevronDown, X, Menu, Clock, MapPin, Tag, CreditCard, Info, Award, Star, Trophy } from 'lucide-react';
 
 // ===== TYPES =====
 type AuthStep = 'initial' | 'student' | 'organizer';
@@ -35,6 +34,9 @@ interface Event {
   certificates?: Certificate[];
   imageUrl: string;
   registrations?: number;
+  description?: string;
+  requirements?: string[];
+  benefits?: string[];
 }
 
 interface FilterOptions {
@@ -84,26 +86,26 @@ const AuthModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-fadeIn">
         <div className="p-6">
           {step === 'initial' ? (
             <div className="text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 mb-4">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 mb-4 animate-bounce">
                 <Calendar className="h-6 w-6 text-indigo-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to EventHub</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Archives</h3>
               <p className="text-gray-600 mb-6">Join as a student or organizer</p>
               <div className="space-y-4">
                 <button
                   onClick={onStudentClick}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200"
+                  className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200 hover:scale-105 transform"
                 >
                   <BookOpen className="mr-2 h-5 w-5" />
                   I'm a Student
                 </button>
                 <button
                   onClick={onOrganizerClick}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200"
+                  className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200 hover:scale-105 transform"
                 >
                   <Users className="mr-2 h-5 w-5" />
                   I'm an Organizer
@@ -229,7 +231,7 @@ const AuthModal: React.FC<{
 
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                 >
                   {step === 'student' ? 'Join as Student' : 'Register as Organizer'}
                 </button>
@@ -257,12 +259,12 @@ const Header: React.FC<{
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
-            <div className="p-2 bg-white rounded-lg shadow-md transform hover:rotate-12 transition-transform duration-300">
-              <Calendar className="h-6 w-6 text-indigo-600" />
+          <div className="p-2 bg-white rounded-lg shadow-md transform hover:rotate-12 transition-transform duration-300">             
+          <Trophy className="h-6 w-6 text-indigo-600" />
             </div>
             <span className="text-2xl font-extrabold text-white tracking-tight">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-200">
-                EventHub
+                 Archives
               </span>
             </span>
           </div>
@@ -285,7 +287,7 @@ const Header: React.FC<{
             {userType === 'organizer' && onCreateEvent && (
               <button
                 onClick={onCreateEvent}
-                className="hidden md:flex items-center px-3 py-1.5 bg-white text-indigo-600 text-sm font-medium rounded-full shadow-sm hover:bg-indigo-50 transition-colors duration-200"
+                className="hidden md:flex items-center px-3 py-1.5 bg-white text-indigo-600 text-sm font-medium rounded-full shadow-sm hover:bg-indigo-50 transition-colors duration-200 hover:scale-105 transform"
               >
                 + Create Event
               </button>
@@ -303,7 +305,7 @@ const Header: React.FC<{
 
             <button
               onClick={onSidebarToggle}
-              className="p-2 text-white hover:text-yellow-200 transition-colors duration-200"
+              className="p-2 text-white hover:text-yellow-200 transition-colors duration-200 md:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
@@ -323,11 +325,11 @@ const Header: React.FC<{
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl overflow-hidden z-20 animate-fadeIn">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-medium text-gray-900">{userProfile.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{
-                      userType === 'student' ? 
-                      `Student ID: ${userProfile.name.split(' ')[1]}` : 
-                      userProfile.name
-                    }</p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {userType === 'student' ? 
+                        `Student ID: ${userProfile.name.split(' ')[1]}` : 
+                        userProfile.name}
+                    </p>
                   </div>
                   <div className="py-1">
                     <a
@@ -360,6 +362,88 @@ const Header: React.FC<{
                       Sign out
                     </button>
                   </div>
+                  {/* Footer */}
+<footer className="bg-indigo-900 text-white py-8 mt-12">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col md:flex-row justify-between items-center">
+      {/* Footer Text */}
+      <p className="text-sm text-gray-300 mb-4 md:mb-0">
+        &copy; 2025 Archives. All rights reserved.
+      </p>
+
+      {/* Contact Icons */}
+      <div className="flex space-x-6">
+        {/* Phone */}
+        <a
+          href="tel:+1234567890"
+          className="text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="Phone"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 10l1.5 1.5a2 2 0 002.5 0L9 10m6 0l1.5 1.5a2 2 0 002.5 0L21 10m-9 4v6m0-6a2 2 0 100-4m0 4a2 2 0 110-4"
+            />
+          </svg>
+        </a>
+
+        {/* Email */}
+        <a
+          href="mailto:contact@archives.com"
+          className="text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="Email"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 12H8m8 0a4 4 0 10-8 0 4 4 0 008 0z"
+            />
+          </svg>
+        </a>
+
+        {/* LinkedIn */}
+        <a
+          href="https://linkedin.com/in/yourprofile"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="LinkedIn"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 8a6 6 0 00-12 0v8a6 6 0 0012 0V8z"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
                 </div>
               )}
             </div>
@@ -513,7 +597,7 @@ const EventCard: React.FC<{
             <button
               onClick={() => onRegister(event)}
               disabled={isRegistered || isCompleted || spotsAvailable <= 0}
-              className={`px-3 py-1 rounded-md text-sm font-medium ${isRegistered || isCompleted ? 'bg-gray-200 text-gray-600 cursor-not-allowed' : spotsAvailable <= 0 ? 'bg-red-100 text-red-700 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'} transition-colors duration-200`}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${isRegistered || isCompleted ? 'bg-gray-200 text-gray-600 cursor-not-allowed' : spotsAvailable <= 0 ? 'bg-red-100 text-red-700 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'} transition-colors duration-200 hover:scale-105 transform`}
             >
               {isRegistered ? 'Registered' : isCompleted ? 'Completed' : spotsAvailable <= 0 ? 'Full' : 'Register'}
             </button>
@@ -522,7 +606,7 @@ const EventCard: React.FC<{
               {onManage && (
                 <button
                   onClick={() => onManage(event)}
-                  className="px-3 py-1 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-200"
+                  className="px-3 py-1 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-200 hover:scale-105 transform"
                 >
                   Manage
                 </button>
@@ -530,7 +614,7 @@ const EventCard: React.FC<{
               {onTakeAttendance && !event.completed && (
                 <button
                   onClick={() => onTakeAttendance && onTakeAttendance(event)}
-                  className="px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors duration-200"
+                  className="px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 hover:scale-105 transform"
                 >
                   Attendance
                 </button>
@@ -538,7 +622,7 @@ const EventCard: React.FC<{
               {onMarkAsCompleted && !event.completed && (
                 <button
                   onClick={() => onMarkAsCompleted && onMarkAsCompleted(event.id)}
-                  className="px-3 py-1 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-200"
+                  className="px-3 py-1 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-200 hover:scale-105 transform"
                 >
                   Complete
                 </button>
@@ -606,7 +690,7 @@ const SearchBar: React.FC<{
 
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
         >
           <svg className="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -727,7 +811,7 @@ const EventModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-start">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -919,6 +1003,54 @@ const EventModal: React.FC<{
               )}
 
               <div>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  id="description"
+                  rows={3}
+                  value={editForm.description || ''}
+                  onChange={onEditFormChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-1">
+                  Requirements (comma separated)
+                </label>
+                <input
+                  type="text"
+                  name="requirements"
+                  id="requirements"
+                  value={editForm.requirements?.join(', ') || ''}
+                  onChange={(e) => {
+                    const requirements = e.target.value.split(',').map(item => item.trim());
+                    onEditFormChange({ target: { name: 'requirements', value: requirements } } as any);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="benefits" className="block text-sm font-medium text-gray-700 mb-1">
+                  Benefits (comma separated)
+                </label>
+                <input
+                  type="text"
+                  name="benefits"
+                  id="benefits"
+                  value={editForm.benefits?.join(', ') || ''}
+                  onChange={(e) => {
+                    const benefits = e.target.value.split(',').map(item => item.trim());
+                    onEditFormChange({ target: { name: 'benefits', value: benefits } } as any);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
                 <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">
                   Image URL
                 </label>
@@ -937,7 +1069,7 @@ const EventModal: React.FC<{
                   <button
                     type="button"
                     onClick={onDeleteEvent}
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 hover:scale-105 transform"
                   >
                     Delete
                   </button>
@@ -945,14 +1077,14 @@ const EventModal: React.FC<{
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                  className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={onSaveChanges}
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                 >
                   Save
                 </button>
@@ -960,76 +1092,140 @@ const EventModal: React.FC<{
             </form>
           ) : (
             <div className="mt-6 space-y-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-indigo-600" />
+              <div className="relative h-64 w-full rounded-lg overflow-hidden mb-6">
+                <img
+                  className="w-full h-full object-cover"
+                  src={event.imageUrl}
+                  alt={event.title}
+                />
+              </div>
+
+              <div className="prose max-w-none">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Event Description</h3>
+                <p className="text-gray-600">
+                  {event.description || 'No description provided for this event.'}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Date & Time</h3>
+                      <p className="text-gray-600">{event.date} • {event.time}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <MapPin className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Location</h3>
+                      <p className="text-gray-600">{event.location} ({event.area})</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <Users className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Organizer</h3>
+                      <p className="text-gray-600">{event.organizer}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-medium text-gray-900">Date & Time</h3>
-                  <p className="text-gray-600">{event.date} • {event.time}</p>
+
+                <div className="space-y-4">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <Tag className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Category</h3>
+                      <p className="text-gray-600">{event.category}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Price</h3>
+                      <p className="text-gray-600">{getPriceDisplay()}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">Available Spots</h3>
+                      <p className="text-gray-600">{event.spots} total • {event.spots - (event.registrations || 0)} remaining</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start">
-                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+              {event.requirements && event.requirements.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                    <Info className="h-5 w-5 text-indigo-600 mr-2" />
+                    Requirements
+                  </h3>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                    {event.requirements.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-medium text-gray-900">Location</h3>
-                  <p className="text-gray-600">{event.location} ({event.area})</p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-start">
-                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <Users className="h-6 w-6 text-indigo-600" />
+              {event.benefits && event.benefits.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                    <Award className="h-5 w-5 text-indigo-600 mr-2" />
+                    Benefits
+                  </h3>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                    {event.benefits.map((benefit, index) => (
+                      <li key={index}>{benefit}</li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-medium text-gray-900">Organizer</h3>
-                  <p className="text-gray-600">{event.organizer}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-medium text-gray-900">Category & Price</h3>
-                  <p className="text-gray-600">
-                    {event.category} • {getPriceDisplay()}
-                  </p>
-                </div>
-              </div>
+              )}
 
               {userType === 'student' ? (
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end pt-6">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                    className="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                   >
                     Close
                   </button>
                   <button
                     type="button"
                     onClick={onConfirmRegistration}
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                   >
                     Confirm Registration
                   </button>
                 </div>
               ) : (
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end pt-6">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                    className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
                   >
                     Close
                   </button>
@@ -1128,7 +1324,7 @@ const AttendanceModal: React.FC<{
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
             >
               Close
             </button>
@@ -1325,7 +1521,7 @@ const Sidebar: React.FC<{
           <div className="px-6 py-4 border-t border-gray-200">
             <button
               onClick={onClose}
-              className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+              className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
             >
               Close Dashboard
             </button>
@@ -1395,7 +1591,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://in.ewu.edu/careercenter/wp-content/uploads/sites/38/2024/02/Winter-Career-Fair-2025.png"
+      imageUrl: "https://in.ewu.edu/careercenter/wp-content/uploads/sites/38/2024/02/Winter-Career-Fair-2025.png",
+      description: "Join us for the annual Tech Career Fair where you can meet with top tech companies looking for talented students like you. Bring your resume and dress professionally!",
+      requirements: ["Resume", "Business casual attire", "Student ID"],
+      benefits: ["Networking opportunities", "Potential job offers", "Interview practice"]
     },
     {
       id: 2,
@@ -1413,7 +1612,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://calendarmedia.blob.core.windows.net/assets/bc950745-398c-4d56-805e-43bdb917c02f.jpg"
+      imageUrl: "https://calendarmedia.blob.core.windows.net/assets/bc950745-398c-4d56-805e-43bdb917c02f.jpg",
+      description: "Develop your leadership skills with this interactive workshop. Learn how to motivate teams, manage conflicts, and become an effective leader in any organization.",
+      requirements: ["Notebook", "Pen"],
+      benefits: ["Leadership certificate", "Networking", "Skill development"]
     },
     {
       id: 3,
@@ -1440,7 +1642,10 @@ function App() {
           template: "standard"
         }
       ],
-      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjynNtR72RZufppLtNVHS4siSZxusDbhYJKIqsYSrE1-fRb5dJjsz0RedMWLWH_9DKo5Q&usqp=CAU"
+      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjynNtR72RZufppLtNVHS4siSZxusDbhYJKIqsYSrE1-fRb5dJjsz0RedMWLWH_9DKo5Q&usqp=CAU",
+      description: "Intensive one-day bootcamp covering modern web development technologies including HTML5, CSS3, JavaScript, and React. Hands-on coding exercises included.",
+      requirements: ["Laptop", "Basic programming knowledge"],
+      benefits: ["Certificate of completion", "Portfolio project", "Mentorship"]
     },
     {
       id: 4,
@@ -1457,7 +1662,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://images.businessnewsdaily.com/app/uploads/2022/04/04081337/1554238569.jpeg"
+      imageUrl: "https://images.businessnewsdaily.com/app/uploads/2022/04/04081337/1554238569.jpeg",
+      description: "Connect with successful alumni from various industries. Learn about career paths, get advice, and expand your professional network.",
+      requirements: ["Business cards (optional)", "Professional attire"],
+      benefits: ["Networking", "Career advice", "Potential mentorship"]
     },
     {
       id: 5,
@@ -1474,7 +1682,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://newsarenaindia.com/_next/image?url=https%3A%2F%2Fimages.newsarenaindia.com%2Funtitled-design-20250317t191141036jpg_1742218926788.jpg&w=1920&q=75"
+      imageUrl: "https://newsarenaindia.com/_next/image?url=https%3A%2F%2Fimages.newsarenaindia.com%2Funtitled-design-20250317t191141036jpg_1742218926788.jpg",
+      description: "24-hour coding competition where teams build innovative projects from scratch. Prizes for best projects in various categories. Food and drinks provided.",
+      requirements: ["Laptop", "Team of 2-4 people"],
+      benefits: ["Prizes", "Networking", "Portfolio project"]
     },
     {
       id: 6,
@@ -1492,7 +1703,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv2XR2mAO5aEBbkFpK5kVuhaf-l2lW8UJZYh1L5Q3woyFx-s_ALci9u7n1qzEvxYnhPzQ&usqp=CAU"
+      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv2XR2mAO5aEBbkFpK5kVuhaf-l2lW8UJZYh1L5Q3woyFx-s_ALci9u7n1qzEvxYnhPzQ&usqp=CAU",
+      description: "Test your AI and machine learning skills in this competitive coding challenge. Solve real-world problems using Python and popular ML libraries.",
+      requirements: ["Laptop", "Python knowledge"],
+      benefits: ["Prizes", "Skill showcase", "Recognition"]
     },
     {
       id: 7,
@@ -1510,7 +1724,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq6_vserArza_upe32w83K0rxFfizUqoveGT5smX5tdMQgHJ-nLmzbyusV22M8ON_P3hE&usqp=CAU"
+      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq6_vserArza_upe32w83K0rxFfizUqoveGT5smX5tdMQgHJ-nLmzbyusV22M8ON_P3hE&usqp=CAU",
+      description: "Work with real datasets to solve challenging data science problems. Teams will analyze, visualize, and model data to extract insights.",
+      requirements: ["Laptop", "Basic data science knowledge"],
+      benefits: ["Prizes", "Real-world experience", "Networking"]
     },
     {
       id: 8,
@@ -1527,7 +1744,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://www.cfalindia.com/wp-content/uploads/2023/09/International-Mathematical-Olympiad-1.jpg"
+      imageUrl: "https://www.cfalindia.com/wp-content/uploads/2023/09/International-Mathematical-Olympiad-1.jpg",
+      description: "Annual mathematics competition testing problem-solving skills in algebra, geometry, number theory, and combinatorics.",
+      requirements: ["Calculator", "Pencil"],
+      benefits: ["Prizes", "Recognition", "Skill assessment"]
     },
     {
       id: 9,
@@ -1544,7 +1764,10 @@ function App() {
       attended: false,
       attendees: [],
       certificates: [],
-      imageUrl: "https://i.ytimg.com/vi/znMbKz6ZPno/maxresdefault.jpg"
+      imageUrl: "https://i.ytimg.com/vi/znMbKz6ZPno/maxresdefault.jpg",
+      description: "National level hackathon where students work on innovative solutions to problems posed by government departments and industries.",
+      requirements: ["Team of 4-6", "Laptops"],
+      benefits: ["Cash prizes", "Recognition", "Potential implementation"]
     },
   ];
 
@@ -1653,7 +1876,10 @@ function App() {
           registrations: 0,
           attendees: [],
           certificates: [],
-          imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Ol692vtqeCnQj4v1XOhkdI6zNU4sq2bR5vVqlGERXqGgruS0vldWuzXgAI4aGfL4e_E&usqp=CAU"
+          imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Ol692vtqeCnQj4v1XOhkdI6zNU4sq2bR5vVqlGERXqGgruS0vldWuzXgAI4aGfL4e_E&usqp=CAU",
+          description: "Learn how to organize successful events with our comprehensive workshop. Covers planning, marketing, budgeting, and execution.",
+          requirements: ["Notebook", "Pen"],
+          benefits: ["Certificate", "Networking", "Resources"]
         }
       ]);
     }
@@ -1731,7 +1957,10 @@ function App() {
         registrations: 0,
         attendees: [],
         certificates: [],
-        imageUrl: ""
+        imageUrl: "",
+        description: "",
+        requirements: [],
+        benefits: []
       };
       
       setSelectedEvent(newEvent);
@@ -1757,7 +1986,10 @@ function App() {
           isPaid: existingEvent.isPaid,
           price: existingEvent.price || 0,
           imageUrl: existingEvent.imageUrl,
-          organizer: existingEvent.organizer
+          organizer: existingEvent.organizer,
+          description: existingEvent.description,
+          requirements: existingEvent.requirements,
+          benefits: existingEvent.benefits
         });
         setEditMode(true);
         setShowModal(true);
@@ -1934,26 +2166,28 @@ function App() {
         }}
         onCredentialsChange={(e) => {
           const { name, value } = e.target;
-          setCredentials(prev => ({ ...prev, [name]: value }));
+          setCredentials((prev) => ({ ...prev, [name]: value }));
         }}
       />
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
-      <Header 
-        userType={userType} 
-        onLogout={handleLogout} 
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-indigo-50">
+      {/* Header */}
+      <Header
+        userType={userType}
+        onLogout={handleLogout}
         onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         onCreateEvent={userType === 'organizer' ? organizerEventHandlers.handleCreateEvent : undefined}
         userProfile={userProfile}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="sticky top-4 z-10 mb-8">
-          <SearchBar 
-            searchTerm={searchTerm} 
+          <SearchBar
+            searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             onFilterChange={setFilterOptions}
             filterOptions={filterOptions}
@@ -1975,12 +2209,12 @@ function App() {
               spotsAvailable={eventSpots[event.id] ?? event.spots}
               onRegister={handleRegister}
               onManage={userType === 'organizer' ? (event) => organizerEventHandlers.handleEditEvent(event) : undefined}
-              isCreatedByUser={userType === 'organizer' && createdEvents.some(e => e.id === event.id)}
+              isCreatedByUser={userType === 'organizer' && createdEvents.some((e) => e.id === event.id)}
               onMarkAsCompleted={userType === 'organizer' ? () => organizerEventHandlers.handleMarkAsCompleted(event.id) : undefined}
               onTakeAttendance={userType === 'organizer' ? () => organizerEventHandlers.handleTakeAttendance(event) : undefined}
               stats={userType === 'organizer' ? organizerEventHandlers.getEventStats(event.id) : undefined}
               userDiscount={userType === 'student' ? userProfile.discounts : 0}
-              hasCertificate={userType === 'student' && certificates.some(c => c.eventId === event.id && c.studentId === credentials.studentId)}
+              hasCertificate={userType === 'student' && certificates.some((c) => c.eventId === event.id && c.studentId === credentials.studentId)}
             />
           ))}
         </div>
@@ -1997,7 +2231,7 @@ function App() {
             {userType === 'organizer' && (
               <button
                 onClick={organizerEventHandlers.handleCreateEvent}
-                className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 hover:scale-105 transform"
               >
                 Create Your First Event
               </button>
@@ -2005,6 +2239,93 @@ function App() {
           </div>
         )}
       </main>
+
+
+       {/* Footer */}
+       <footer className="bg-indigo-900 text-white py-8 mt-12">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col md:flex-row justify-between items-center">
+      {/* Footer Text */}
+      <p className="text-sm text-gray-300 mb-4 md:mb-0">
+        &copy; 2025 Archives. All rights reserved.
+      </p>
+
+      {/* Contact Icons */}
+      <div className="flex space-x-8">
+        {/* Phone */}
+        <a
+          href="tel:+1234567890"
+          className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="Phone"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 10l1.5 1.5a2 2 0 002.5 0L9 10m6 0l1.5 1.5a2 2 0 002.5 0L21 10m-9 4v6m0-6a2 2 0 100-4m0 4a2 2 0 110-4"
+            />
+          </svg>
+          <span className="text-sm">+1 234 567 890</span>
+        </a>
+
+        {/* Email */}
+        <a
+          href="mailto:contact@archives.com"
+          className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="Email"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 12H8m8 0a4 4 0 10-8 0 4 4 0 008 0z"
+            />
+          </svg>
+          <span className="text-sm">contact@archives.com</span>
+        </a>
+
+        {/* LinkedIn */}
+        <a
+          href="https://linkedin.com/in/yourprofile"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200"
+          aria-label="LinkedIn"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 8a6 6 0 00-12 0v8a6 6 0 0012 0V8z"
+            />
+          </svg>
+          <span className="text-sm">LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
 
       <EventModal
         show={showModal}
@@ -2076,7 +2397,7 @@ function App() {
       <div className="fixed bottom-6 right-6 md:hidden">
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-transform duration-200 hover:scale-110"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
