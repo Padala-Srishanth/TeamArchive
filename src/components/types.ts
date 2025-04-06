@@ -65,3 +65,5 @@ export interface UserProfile {
 export interface AttendanceList {
   [eventId: number]: string[];
 }
+
+
